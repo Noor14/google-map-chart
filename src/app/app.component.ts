@@ -9,7 +9,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
-
+declare var google: any;
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -22,8 +22,6 @@ export class AppComponent implements OnInit {
   @ViewChild(MapMarker) Marker: MapMarker;
   @ViewChild(MapPolyline) polyline: MapPolyline;
 
-  public selectedRoute = 'Select Route';
-  public vesselInfo: any = {};
   public mapOptions: google.maps.MapOptions = {
     center: { lat: 0, lng: 0 },
     zoom: 5,
@@ -65,11 +63,10 @@ export class AppComponent implements OnInit {
       },
     ],
   };
+  public vesselInfo: any = {};
   public polylineCoordinates: any = [];
-  public below = LegendPosition.Below;
-  public xAxisLabel: string = 'Time in Hour';
-  public yAxisLabel: string = 'Speed in Kilometer per Hour';
   public graphData: any[] = [];
+  public below = LegendPosition.Below;
   private readonly _http = inject(HttpClient);
 
   ngOnInit(): void {

@@ -49,14 +49,14 @@
       <div class="col-lg-7">
         <div class="content">
           <ngx-charts-line-chart
-            [legend]="true"
+            [legend]="!!graphData.length"
             [showXAxisLabel]="true"
             [showYAxisLabel]="true"
             [animations]="true"
             [xAxis]="true"
             [yAxis]="true"
-            [xAxisLabel]="xAxisLabel"
-            [yAxisLabel]="yAxisLabel"
+            [xAxisLabel]="'Time in Hour'"
+            [yAxisLabel]="'Speed in Kilometer per Hour'"
             [results]="graphData"
             [legendPosition]="below"
           >
