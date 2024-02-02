@@ -1,42 +1,25 @@
 <section class="vesselMap">
-  <div class="container-fluid">
-    <!-- <select class="form-select mb-4 w-25">
-      @for (route of vesselInfo; track $index){
-      <option>
-        {{
-          
-        }}
-      </option>
-      }
-    </select> -->
-
-    <div ngbDropdown class="d-inline-block">
-      <button
-        type="button"
-        class="btn btn-outline-primary"
-        id="dropdownBasic1"
-        ngbDropdownToggle
-      >
-        {{ selectedRoute }}
-      </button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        @for (obj of vesselInfo | keyvalue; track obj; let i=$index){
-
-        <button ngbDropdownItem (click)="routeChange(i + 1)">
-          {{
+  <div class="container-fluid py-3">
+    <div class="col-lg-3 col-md-4 mb-3">
+      <h6 class="text-uppercase fw-bold">Route Selection</h6>
+      <select class="form-select" #elem (change)="vesselPath(elem.value)">
+        <option [value]="''">Select Route</option>
+        @for (obj of vesselInfo | keyvalue; track obj; let i=$index) {
+        <option [value]="i + 1">
+          Route:{{
             i +
               1 +
-              "-" +
+              " - " +
               vesselInfo[i + 1].from_port +
-              "to" +
+              " to " +
               vesselInfo[i + 1].to_port +
-              "duration" +
-              vesselInfo[i + 1].leg_duration +
-              "hr"
+              " in " +
+              (vesselInfo[i + 1].leg_duration | number : "1.2-2") +
+              " Hrs"
           }}
-        </button>
+        </option>
         }
-      </div>
+      </select>
     </div>
 
     <div class="row">
@@ -75,6 +58,7 @@
             [xAxisLabel]="xAxisLabel"
             [yAxisLabel]="yAxisLabel"
             [results]="graphData"
+            [legendPosition]="below"
           >
           </ngx-charts-line-chart>
         </div>

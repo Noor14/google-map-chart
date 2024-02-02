@@ -8,13 +8,12 @@ import {
 } from '@angular/google-maps';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, NgbDropdownModule, GoogleMapsModule, NgxChartsModule],
+  imports: [CommonModule, GoogleMapsModule, NgxChartsModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
@@ -26,7 +25,8 @@ export class AppComponent implements OnInit {
   public selectedRoute = 'Select Route';
   public vesselInfo: any = {};
   public mapOptions: google.maps.MapOptions = {
-    zoom: 14,
+    center: { lat: 0, lng: 0 },
+    zoom: 5,
     zoomControl: false,
     mapTypeControl: false,
     streetViewControl: false,
@@ -66,10 +66,9 @@ export class AppComponent implements OnInit {
     ],
   };
   public polylineCoordinates: any = [];
-
-  public view: [number, number] = [900, 300];
+  public below = LegendPosition.Below;
   public xAxisLabel: string = 'Time in Hour';
-  public yAxisLabel: string = 'Speed in per Hour';
+  public yAxisLabel: string = 'Speed in Kilometer per Hour';
   public graphData: any[] = [];
   private readonly _http = inject(HttpClient);
 
@@ -93,18 +92,17 @@ export class AppComponent implements OnInit {
             );
           });
 
-          console.log(data);
           this.vesselInfo = data;
         })
       )
       .subscribe();
   }
 
-  routeChange(key: number) {
-    this.vesselPath(key);
-  }
-
-  vesselPath(routeId: number) {
+  vesselPath(routeId: string) {
+    if (!routeId) {
+      this.polylineCoordinates = this.graphData = [];
+      return;
+    }
     this.polylineCoordinates = this.vesselInfo[routeId].points;
     const avgSpeed =
       this.polylineCoordinates.reduce(
