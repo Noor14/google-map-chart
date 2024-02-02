@@ -1,1 +1,84 @@
-<section class="vesselMap">d</section>
+<section class="vesselMap">
+  <div class="container-fluid">
+    <!-- <select class="form-select mb-4 w-25">
+      @for (route of vesselInfo; track $index){
+      <option>
+        {{
+          
+        }}
+      </option>
+      }
+    </select> -->
+
+    <div ngbDropdown class="d-inline-block">
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        id="dropdownBasic1"
+        ngbDropdownToggle
+      >
+        {{ selectedRoute }}
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        @for (obj of vesselInfo | keyvalue; track obj; let i=$index){
+
+        <button ngbDropdownItem (click)="routeChange(i + 1)">
+          {{
+            i +
+              1 +
+              "-" +
+              vesselInfo[i + 1].from_port +
+              "to" +
+              vesselInfo[i + 1].to_port +
+              "duration" +
+              vesselInfo[i + 1].leg_duration +
+              "hr"
+          }}
+        </button>
+        }
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-5">
+        <google-map
+          [zoom]="4"
+          height="300px"
+          width="100%"
+          [options]="mapOptions"
+        >
+          <ng-container *ngIf="polylineCoordinates.length">
+            <map-marker
+              [options]="markerOptions"
+              [position]="polylineCoordinates[0]"
+            />
+            <map-marker
+              [position]="polylineCoordinates[polylineCoordinates.length - 1]"
+            />
+          </ng-container>
+
+          <map-polyline
+            [options]="polylineOptions"
+            [path]="polylineCoordinates"
+          />
+        </google-map>
+      </div>
+      <div class="col-lg-7">
+        <div class="content">
+          <ngx-charts-line-chart
+            [legend]="true"
+            [showXAxisLabel]="true"
+            [showYAxisLabel]="true"
+            [animations]="true"
+            [xAxis]="true"
+            [yAxis]="true"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            [results]="graphData"
+          >
+          </ngx-charts-line-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
