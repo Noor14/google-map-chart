@@ -10,6 +10,20 @@ import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 declare var google: any;
+const months: string[] = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -83,7 +97,7 @@ export class AppComponent implements OnInit {
               ([lng, lat, time, speed]: number[]) => ({
                 lng,
                 lat,
-                time: time / (60 * 60 * 1000), // convert millisecond into hr
+                time: this.millisecondTOISODate(time), // convert millisecond into date
                 speed: speed * 1.852, // 1knot is equal to 1.852/hr,
               })
             );
@@ -93,6 +107,15 @@ export class AppComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  private millisecondTOISODate(time: number): string {
+    const dt = new Date(time);
+    const date = dt.getUTCDate();
+    const mon = dt.getUTCMonth();
+    const hr = dt.getUTCHours();
+    const m = '0' + dt.getUTCMinutes();
+    return date + '-' + months[mon] + ' ' + hr + ':' + m.slice(-2);
   }
 
   vesselPath(routeId: string) {
@@ -121,7 +144,7 @@ export class AppComponent implements OnInit {
     this.map.fitBounds(polylineBounds);
   }
 
-  getPolylineBounds(polylineCoordinates: any[]) {
+  private getPolylineBounds(polylineCoordinates: any[]) {
     let minLat = Number.MAX_VALUE;
     let minLng = Number.MAX_VALUE;
     let maxLat = Number.MIN_VALUE;
